@@ -7,7 +7,7 @@
 #endif
 
 std::thread Logger::logThread;
-std::mutex *Logger::lock;
+std::mutex *Logger::lock = nullptr;
 std::condition_variable Logger::waiter;
 std::ofstream Logger::out;
 std::vector<std::string> Logger::buffer;
@@ -23,7 +23,6 @@ void Logger::setup(const std::string& path)
 {
     logThread = std::thread(&Logger::loop);
     out.open(path.empty() ? defaultPath : path);
-    lock = new std::mutex();
 }
 
 void Logger::close()
@@ -61,6 +60,7 @@ void Logger::log(const std::string& message)
 
 void Logger::loop()
 {
+    lock = new std::mutex();
     while (logging) {
         while (!buffer.empty()) {
 #ifndef NDEBUG
