@@ -34,13 +34,9 @@ void Logger::close()
         buffer.clear();
         lock->unlock();
     }
-    try {
-        waiter.notify_one();
-        logThread.join();
-        out.close();
-    } catch (std::system_error e) {
-        qDebug() << e.what() << e.code().value();
-    }
+    waiter.notify_one();
+    logThread.join();
+    out.close();
 }
 
 Logger& Logger::operator<<(const std::string& message) {
