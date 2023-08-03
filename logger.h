@@ -6,6 +6,7 @@
 #include <mutex>
 #include <condition_variable>
 
+// TODO : fix logging into file
 class Logger
 {
 public:

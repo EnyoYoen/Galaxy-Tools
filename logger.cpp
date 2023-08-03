@@ -2,8 +2,6 @@
 
 #include <fstream>
 
-#include <QDebug>
-
 #ifndef NDEBUG
 #include <iostream>
 #endif
@@ -36,7 +34,6 @@ void Logger::close()
         buffer.clear();
         lock->unlock();
     }
-    qDebug() << "d";
     try {
         waiter.notify_one();
         logThread.join();
@@ -62,7 +59,6 @@ void Logger::log(const std::string& message)
         lock->lock();
         buffer.push_back(message);
         lock->unlock();
-        qDebug() << "a";
         waiter.notify_one();
     }
 }
@@ -79,10 +75,8 @@ void Logger::loop()
             buffer.erase(buffer.begin());
             lock->unlock();
         }
-        qDebug() << "b";
         std::unique_lock<std::mutex> lk(*lock);
         waiter.wait(lk);
         lk.unlock();
-        qDebug() << "c";
     }
 }
