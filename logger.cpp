@@ -22,6 +22,7 @@ Logger::Logger(const char *m_module)
 void Logger::setup(const std::string& path)
 {
     logThread = std::thread(&Logger::loop);
+    lock = new std::mutex();
     out.open(path.empty() ? defaultPath : path);
 }
 
